@@ -1,5 +1,7 @@
  package com.grupo6.serviciosRestClient;
 
+import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,24 +59,36 @@ public class Grupo6Ae2ServiciosRestClientApplication implements CommandLineRunne
             
             opcion = scanner.nextInt();
             scanner.nextLine();
-
+            
+            String idStr = "Introduzca el ID: " ;
+            Libro auxLibro = null;
+            
             switch (opcion) {
                 case 1:
-                	Libro libro = new Libro (0,"titulo1","editorial",0.0);
-                	System.out.println(spl.altaLibro(libro));
+                	auxLibro = crearLibroScanner(scanner, 0);
+                	System.out.println(spl.altaLibro(auxLibro));
                     break;
                 case 2:
-                	System.out.println(spl.borrarLibro(3));
+                	System.out.println(spl.borrarLibro(getNextIntValido(scanner, idStr)));
                     break;
                 case 3:
-                	Libro libro2 = new Libro (0,"titulo1","editorial",0.0);
-                	System.out.println(spl.modificarLibro(libro2));
+                	int id = getNextIntValido(scanner, idStr);
+                	auxLibro = spl.consultarLibro(id);
+                	if(auxLibro != null) {
+                		scanner.nextLine();
+                		auxLibro = crearLibroScanner(scanner, auxLibro.getId());
+                    	System.out.println(spl.modificarLibro(auxLibro));
+                	} else System.out.println("Libro no encontrado el libro con ID " + id);                	
                     break;
                 case 4:
-                	System.out.println(spl.consultarLibro(1));
+                	System.out.println(spl.consultarLibro(getNextIntValido(scanner, idStr)));
                     break;
                 case 5:
-                	System.out.println(spl.consultarListado());
+                	ArrayList<Libro> list = new ArrayList<>(spl.consultarListado());
+                	for (Libro l : list) {
+						System.out.println(l.toString());
+					}
+                	//System.out.println(spl.consultarListado());
                     break;
                 case 6:
                     pararAplicacion();
@@ -93,4 +107,36 @@ public class Grupo6Ae2ServiciosRestClientApplication implements CommandLineRunne
 		SpringApplication.exit(context, ()->0);
 	}
 
+	private int getNextIntValido(Scanner scanner, String titulo) {
+		
+		try {
+			System.out.print(titulo);
+			int id = scanner.nextInt();			
+			if(id < 0) {
+				System.out.print("Se debe introducir un numero valido");
+				scanner.next();
+				return getNextIntValido(scanner, ": ");
+			}else return id; 							
+		} catch (InputMismatchException ime) {
+			System.out.print("Se debe introducir un numero entero");
+			scanner.next();
+			return getNextIntValido(scanner, ": ");
+		} catch (Exception e) {		
+			return 0;
+		}
+	}
+	
+	private Libro crearLibroScanner(Scanner scanner, int id) {
+		String titulo, editorial;
+		float nota;
+		
+		System.out.print("| Introduce el titulo: " );
+		titulo = scanner.nextLine();
+		System.out.print("| Introduce la editorial: " );
+		editorial = scanner.nextLine();
+		System.out.print("| Introduce la nota: " );
+		nota = scanner.nextFloat();		
+		
+		return new Libro(id, titulo, editorial, nota);
+	}
 }
