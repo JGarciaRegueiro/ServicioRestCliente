@@ -69,10 +69,10 @@ public class Grupo6Ae2ServiciosRestClientApplication implements CommandLineRunne
                 	System.out.println(spl.altaLibro(auxLibro));
                     break;
                 case 2:
-                	System.out.println(spl.borrarLibro(getNextIntValido(scanner, idStr)));
+                	System.out.println(spl.borrarLibro(getIDValido(scanner, idStr)));
                     break;
                 case 3:
-                	int id = getNextIntValido(scanner, idStr);
+                	int id = getIDValido(scanner, idStr);
                 	auxLibro = spl.consultarLibro(id);
                 	if(auxLibro != null) {
                 		scanner.nextLine();
@@ -81,7 +81,7 @@ public class Grupo6Ae2ServiciosRestClientApplication implements CommandLineRunne
                 	} else System.out.println("Libro no encontrado el libro con ID " + id);                	
                     break;
                 case 4:
-                	System.out.println(spl.consultarLibro(getNextIntValido(scanner, idStr)));
+                	System.out.println(spl.consultarLibro(getIDValido(scanner, idStr)));
                     break;
                 case 5:
                 	ArrayList<Libro> list = new ArrayList<>(spl.consultarListado());
@@ -107,7 +107,7 @@ public class Grupo6Ae2ServiciosRestClientApplication implements CommandLineRunne
 		SpringApplication.exit(context, ()->0);
 	}
 
-	private int getNextIntValido(Scanner scanner, String titulo) {
+	private int getIDValido(Scanner scanner, String titulo) {
 		
 		try {
 			System.out.print(titulo);
@@ -115,12 +115,30 @@ public class Grupo6Ae2ServiciosRestClientApplication implements CommandLineRunne
 			if(id < 0) {
 				System.out.print("Se debe introducir un numero valido");
 				scanner.next();
-				return getNextIntValido(scanner, ": ");
+				return getIDValido(scanner, ": ");
 			}else return id; 							
 		} catch (InputMismatchException ime) {
 			System.out.print("Se debe introducir un numero entero");
 			scanner.next();
-			return getNextIntValido(scanner, ": ");
+			return getIDValido(scanner, ": ");
+		} catch (Exception e) {		
+			return 0;
+		}
+	}
+	
+	private float getNotaValido(Scanner scanner, String titulo) {
+		try {
+			System.out.print(titulo);
+			float nota = scanner.nextFloat();			
+			if(nota < 0 || nota > 10) {
+				System.out.print("Se debe introducir un numero entre [0] y [10]");
+				scanner.next();
+				return getNotaValido(scanner, ": ");
+			}else return nota; 							
+		} catch (InputMismatchException ime) {
+			System.out.print("Se debe introducir un numero valido");
+			scanner.next();
+			return getNotaValido(scanner, ": ");
 		} catch (Exception e) {		
 			return 0;
 		}
@@ -135,7 +153,7 @@ public class Grupo6Ae2ServiciosRestClientApplication implements CommandLineRunne
 		System.out.print("| Introduce la editorial: " );
 		editorial = scanner.nextLine();
 		System.out.print("| Introduce la nota: " );
-		nota = scanner.nextFloat();		
+		nota = getNotaValido(scanner, "");	
 		
 		return new Libro(id, titulo, editorial, nota);
 	}
