@@ -61,14 +61,14 @@ public class Grupo6Ae2ServiciosRestClientApplication implements CommandLineRunne
             switch (opcion) {
                 case 1:
                 	Libro libro = new Libro (0,"titulo1","editorial",0.0);
-                	spl.altaLibro(libro);
+                	System.out.println(spl.altaLibro(libro));
                     break;
                 case 2:
                 	System.out.println(spl.borrarLibro(3));
                     break;
                 case 3:
                 	Libro libro2 = new Libro (0,"titulo1","editorial",0.0);
-                	spl.modificarLibro(libro2);
+                	System.out.println(spl.modificarLibro(libro2));
                     break;
                 case 4:
                 	System.out.println(spl.consultarLibro(1));
