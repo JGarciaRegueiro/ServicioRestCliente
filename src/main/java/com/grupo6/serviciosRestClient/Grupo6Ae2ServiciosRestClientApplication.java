@@ -1,6 +1,8 @@
  package com.grupo6.serviciosRestClient;
 
 import java.util.ArrayList;
+
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -16,6 +18,11 @@ import org.springframework.web.client.RestTemplate;
 import com.grupo6.serviciosRestClient.modelo.Libro;
 import com.grupo6.serviciosRestClient.servicio.ServicioProxyLibro;
 
+
+/**
+ * Aplicación que interactúa con un servicio web RESTful de libros.
+ */
+
 @SpringBootApplication
 public class Grupo6Ae2ServiciosRestClientApplication implements CommandLineRunner{
 	
@@ -25,22 +32,38 @@ public class Grupo6Ae2ServiciosRestClientApplication implements CommandLineRunne
 	@Autowired
 	private ApplicationContext context;
 	
+	/**
+     * Configuración del bean RestTemplate para realizar solicitudes HTTP.
+     *
+     * @param builder: Constructor de RestTemplate.
+     * @return Instancia de RestTemplate.
+     */
 	@Bean
 	public RestTemplate restTemplate(RestTemplateBuilder builder) {
 		return builder.build();
 	}
 
+	/**
+     * Método principal que carga el contexto de Spring y ejecuta la aplicación.
+     */
+	
 	public static void main(String[] args) {
 		System.out.println("Cargando contexto de spring...");
 		SpringApplication.run(Grupo6Ae2ServiciosRestClientApplication.class, args);
 	}
-
+	
+	/**
+     * Implementación del método CommandLineRunner para manejar la lógica principal de la aplicación.
+     *
+     * @throws Exception: Excepciones generales.
+     */
 	@Override
 	public void run(String... args) throws Exception {
 		Scanner scanner = new Scanner(System.in);
         int opcion;
 
         do {
+        	// Menú principal
             System.out.println("-----------------------------------------------------------");
             System.out.println("Menú:");
             System.out.println("1. Dar de alta un libro");
@@ -103,10 +126,23 @@ public class Grupo6Ae2ServiciosRestClientApplication implements CommandLineRunne
         scanner.close();
 	}
 	
+	/**
+     * Detiene la aplicación de Spring.
+     */
+	
 	public void pararAplicacion() {
 		SpringApplication.exit(context, ()->0);
 	}
 
+	
+	/**
+     * Obtiene un ID válido desde la entrada del usuario.
+     *
+     * @param scanner: Instancia de Scanner para entrada de usuario.
+     * @param titulo: Título para la solicitud de entrada.
+     * @return ID válido.
+     */
+	
 	private int getIDValido(Scanner scanner, String titulo) {
 		
 		try {
@@ -126,6 +162,14 @@ public class Grupo6Ae2ServiciosRestClientApplication implements CommandLineRunne
 		}
 	}
 	
+	/**
+     * Obtiene una nota válida desde la entrada del usuario.
+     *
+     * @param scanner: Instancia de Scanner para entrada de usuario.
+     * @param titulo: Título para la solicitud de entrada.
+     * @return Nota válida.
+     */
+	
 	private float getNotaValido(Scanner scanner, String titulo) {
 		try {
 			System.out.print(titulo);
@@ -143,6 +187,14 @@ public class Grupo6Ae2ServiciosRestClientApplication implements CommandLineRunne
 			return 0;
 		}
 	}
+	
+	/**
+     * Crea un objeto Libro utilizando la entrada del usuario.
+     *
+     * @param scanner: Instancia de Scanner para entrada de usuario.
+     * @param id: ID del libro.
+     * @return Objeto Libro creado.
+     */
 	
 	private Libro crearLibroScanner(Scanner scanner, int id) {
 		String titulo, editorial;
